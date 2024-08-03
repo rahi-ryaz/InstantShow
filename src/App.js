@@ -1,10 +1,8 @@
-import './App.css';
+import Body from "./components/Body";
 
 function App() {
   return (
-    <div className="text-4xl text-red-400 font-bold flex justify-center ">
-     InstantShow
-    </div>
+   <Body/>
   );
 }
 
