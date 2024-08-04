@@ -1,6 +1,8 @@
+
 import React, { useRef, useState } from 'react'
 import Header from './Header'
 import { checkValidData } from '../utils/validate';
+
 
 const Login = () => {
 
@@ -32,14 +34,17 @@ const Login = () => {
       </div>
 
 
+
       <form onSubmit= {(e) => e.preventDefault()}
        className='w-3/12 h-4/5 absolute p-12 my-36 mx-auto left-0 right-0 bg-black rounded-lg bg-opacity-70'>
+
       <h1 className= "text-white font-bold text-2xl pb-4">{IsSignInForm ? "Sign In" : "Sign Up"}</h1>
        
 
       { !IsSignInForm &&
         <input type="text" 
         placeholder='Full Name' 
+
         className="p-4 my-2 bg-gray-800 w-full  rounded-md" />
         }
 
@@ -58,11 +63,13 @@ const Login = () => {
         placeholder='Password' 
         className='p-4 my-2 bg-gray-800 w-full text-white rounded-md'/>
 
-           <p className ="text-red-500 font-bold text-lg">{errorMessage}</p>
+        <p className ="text-red-500 font-bold text-lg">{errorMessage}</p>
 
         <button className=" bg-[#C11119] text-white text-2xl p-4,my-2 w-full rounded-md" onClick= {handleButtonClick}>{IsSignInForm ? "Sign In" : "Sign Up"} </button>
 
         <p className ="text-white py-4 m-2 cursor-pointer" onClick ={toggleSignInform}>{IsSignInForm ? "New to Instantshow? Sign Up Now": "A;ready registered? Sign In Now"}  </p>
+
+
 
       </form>
     </div>
