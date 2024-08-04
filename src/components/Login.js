@@ -5,7 +5,6 @@ import { checkValidData } from '../utils/validate';
 
 import { createUserWithEmailAndPassword ,signInWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {auth} from "../utils/firebase" 
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
 
@@ -16,29 +15,28 @@ const Login = () => {
   
 
   const dispatch=useDispatch();
-  const [IsSignInForm ,setIsSignInForm] =useState(true);
+  const [isSignInForm ,setIsSignInForm] =useState(true);
   const [errorMessage, setErrorMessage]= useState(null);
-  const navigate = useNavigate();
 
   const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
 
   const toggleSignInform =() => {
-    setIsSignInForm(!IsSignInForm);
+    setIsSignInForm(!isSignInForm);
 
   }
 
   const handleButtonClick=() =>{
     //validate data 
-    // console.log(email.current.value,password.current.value)
+  
     const message= checkValidData(email.current.value, password.current.value);
   
     setErrorMessage(message);
     if(message) return;
 
 
-    if(!IsSignInForm){
+    if(!isSignInForm){
       createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
        .then((userCredential) => {
      // Signed up 
@@ -46,11 +44,11 @@ const Login = () => {
      updateProfile(user, {
       displayName: name.current.value,
       photoURL: 'https://spline.design/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fspline_logo.647803e0.png&w=64&q=75',
-
     })
+
     .then(() => {
       const {uid,email,displayName, photoURL }= auth.currentUser;
-      // console.log(auth.currentUser,"from login:user")
+
       dispatch(
         addUser({
           uid:uid ,
@@ -59,7 +57,6 @@ const Login = () => {
             photoURL:photoURL
           }));
 
-      navigate("/browse");
     }).catch((error) => {
       setErrorMessage(error.message);
   });
@@ -84,7 +81,7 @@ const Login = () => {
      const user = userCredential.user;
      console.log(user);
      // ...
-     navigate("/browse")
+     
    })
    .catch((error) => {
      const errorCode = error.code;
@@ -93,11 +90,6 @@ const Login = () => {
    });
    }
   }
-
-  
-
-  
-
 
   return (
     <div >
@@ -111,10 +103,10 @@ const Login = () => {
       <form onSubmit= {(e) => e.preventDefault()}
        className='w-3/12 h-4/5 absolute p-12 my-36 mx-auto left-0 right-0 bg-black rounded-lg bg-opacity-70'>
 
-      <h1 className= "text-white font-bold text-2xl pb-4">{IsSignInForm ? "Sign In" : "Sign Up"}</h1>
+      <h1 className= "text-white font-bold text-2xl pb-4">{isSignInForm ? "Sign In" : "Sign Up"}</h1>
        
 
-      { !IsSignInForm &&
+      { !isSignInForm &&
         <input
         ref={name}
         type="text" 
@@ -134,15 +126,15 @@ const Login = () => {
 
         <input
          ref={password}
-        type="text" 
+        type="password" 
         placeholder='Password' 
         className='p-4 my-2 bg-gray-800 w-full text-white rounded-md'/>
 
         <p className ="text-red-500 font-bold text-lg">{errorMessage}</p>
 
-        <button className=" bg-[#C11119] text-white text-2xl p-4,my-2 w-full rounded-md" onClick= {handleButtonClick}>{IsSignInForm ? "Sign In" : "Sign Up"} </button>
+        <button className=" bg-[#C11119] text-white text-2xl p-4,my-2 w-full rounded-md" onClick= {handleButtonClick}>{isSignInForm ? "Sign In" : "Sign Up"} </button>
 
-        <p className ="text-white py-4 m-2 cursor-pointer" onClick ={toggleSignInform}>{IsSignInForm ? "New to Instantshow? Sign Up Now": "A;ready registered? Sign In Now"}  </p>
+        <p className ="text-white py-4 m-2 cursor-pointer" onClick ={toggleSignInform}>{isSignInForm ? "New to Instantshow? Sign Up Now": "Already registered? Sign In Now"}  </p>
 
 
 
