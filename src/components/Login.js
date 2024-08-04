@@ -3,9 +3,11 @@ import React, { useRef, useState } from 'react'
 import Header from './Header'
 import { checkValidData } from '../utils/validate';
 
-import { createUserWithEmailAndPassword ,signInWithEmailAndPassword} from "firebase/auth";
+import { createUserWithEmailAndPassword ,signInWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {auth} from "../utils/firebase" 
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
 
 
 
@@ -13,10 +15,12 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   
 
+  const dispatch=useDispatch();
   const [IsSignInForm ,setIsSignInForm] =useState(true);
   const [errorMessage, setErrorMessage]= useState(null);
   const navigate = useNavigate();
 
+  const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
 
@@ -39,9 +43,27 @@ const Login = () => {
        .then((userCredential) => {
      // Signed up 
      const user = userCredential.user;
-     console.log(user);
-     // ...
-     navigate("/browse")
+     updateProfile(user, {
+      displayName: name.current.value,
+      photoURL: 'https://spline.design/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fspline_logo.647803e0.png&w=64&q=75',
+
+    })
+    .then(() => {
+      const {uid,email,displayName, photoURL }= auth.currentUser;
+      // console.log(auth.currentUser,"from login:user")
+      dispatch(
+        addUser({
+          uid:uid ,
+           email:email ,
+            displayName:displayName , 
+            photoURL:photoURL
+          }));
+
+      navigate("/browse");
+    }).catch((error) => {
+      setErrorMessage(error.message);
+  });
+
    })
    .catch((error) => {
      const errorCode = error.code;
@@ -49,8 +71,8 @@ const Login = () => {
      setErrorMessage(errorCode + "-" + errorMessage)
      // ..
    });
- 
-   } else{
+   
+   }  else{
     //sign in logic
      signInWithEmailAndPassword
      (auth,
@@ -93,7 +115,9 @@ const Login = () => {
        
 
       { !IsSignInForm &&
-        <input type="text" 
+        <input
+        ref={name}
+        type="text" 
         placeholder='Full Name' 
 
         className="p-4 my-2 bg-gray-800 w-full  rounded-md" />
