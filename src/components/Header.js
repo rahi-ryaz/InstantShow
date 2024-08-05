@@ -59,7 +59,7 @@ const Header = () => {
  { user &&
     ( <div className="text-cyan-800 ">
       <img className="w-12,h-12" src ={user?.photoURL} alt= "user icon"/>
-      {/* {console.log(user?.photoURL,"from headers")} */}
+      
       <button onClick={handleSignOut} className ="font-bold text-red-800">(Sign Out)</button>
     </div>)
     }
