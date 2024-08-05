@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword ,signInWithEmailAndPassword, updateProfi
 import {auth} from "../utils/firebase" 
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
+import { USER_AVATAR } from '../utils/constants';
 
 
 
@@ -43,7 +44,7 @@ const Login = () => {
      const user = userCredential.user;
      updateProfile(user, {
       displayName: name.current.value,
-      photoURL: 'https://spline.design/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fspline_logo.647803e0.png&w=64&q=75',
+      photoURL:USER_AVATAR,
     })
 
     .then(() => {

@@ -26,7 +26,7 @@ const Header = () => {
    }
    
     useEffect(()=>{
-    onAuthStateChanged(auth,(user) => {
+   const unsubscribe = onAuthStateChanged(auth,(user) => {
       if (user) {
 
         const {uid,email,displayName, photoURL }= user;
@@ -47,6 +47,8 @@ const Header = () => {
      
       }
     });
+
+    return () => unsubscribe(); //its kinda of Event Listener ,so need to unsubscribe when compo unMounts
 
   },[]);
 
