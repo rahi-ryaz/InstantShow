@@ -1,24 +1,28 @@
-import { API_OPTIONS } from '../utils/constants';
-import { useDispatch } from 'react-redux';
-import { addNowPlayingMovies } from '../utils/moviesSlice';
-import { useEffect } from 'react';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { API_OPTIONS } from "../utils/constants";
+import { addNowPlayingMovies } from "../utils/moviesSlice";
 
-const useNowPlayingMovies =() =>{
-    const dispatch=useDispatch();
+const useNowPlayingMovies = () => {
+  // Fetch Data from TMDB API and update store
+  const dispatch = useDispatch();
 
-  const getNowPlayingMovies=async()=>{
-  const data= await fetch('https://api.themoviedb.org/3/movie/now_playing?page=1', API_OPTIONS);
-  const json =await data.json();
-  dispatch(addNowPlayingMovies(json.results));
+  const nowPlayingMovies = useSelector(
+    (store) => store.movies.nowPlayingMovies
+  );
 
+  const getNowPlayingMovies = async () => {
+    const data = await fetch(
+      "https://api.themoviedb.org/3/movie/now_playing?page=1",
+      API_OPTIONS
+    );
+    const json = await data.json();
+    dispatch(addNowPlayingMovies(json.results));
+  };
+
+  useEffect(() => {
+    !nowPlayingMovies && getNowPlayingMovies();
+  },[]);
 };
-// making api call inside useEffect so when compo is rendered its called only once
-//put [] to avoid infinite api calls
-
-useEffect(()=>{
-  getNowPlayingMovies();
-
-},[])
-}
 
 export default useNowPlayingMovies;
